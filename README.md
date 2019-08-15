@@ -1,6 +1,7 @@
 ## task-conexa
 
 Abaixo apresenta a modelo do banco de dados criado. Na pasta `db-model` contém os arquivos `source.sql` e `source2.sql` para a criação do mesmo.
+
 <img src="db-model/db_schema.png" alt="db schema" height="325px" width="407px">
 
 * **source.sql:**
