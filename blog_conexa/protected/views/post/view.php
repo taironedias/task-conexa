@@ -2,10 +2,18 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/custom.css" />
 </head>
 <?php
+$teste = "123";
 $this->menu = array(
 	array('label' => 'Ver Posts', 'url' => array('index')),
 	array('label' => 'Criar Post', 'url' => array('create')),
-	array('label' => 'Atualizar Post', 'url' => array('update', 'id' => $model->id)),
+	array(
+		'label' => 'Atualizar Post', 
+		'url' => array(
+			'update', 
+			'id' => $model->id
+		),
+		'visible' => $model->idUser == Yii::app()->user->id
+	),
 );
 ?>
 

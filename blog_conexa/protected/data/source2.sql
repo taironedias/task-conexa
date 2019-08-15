@@ -8,4 +8,5 @@ select * from Post order by dataPost desc limit 10;
 select c.texto, u.username from Comentario c join User u on u.id=c.idUser where c.idPost=2;
 
 select * from Comentario;
-SELECT COUNT(*) FROM Comentario WHERE idPost = 3;
+SELECT COUNT(*) FROM Comentario WHERE idPost = 38;
+
