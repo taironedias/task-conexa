@@ -32,14 +32,13 @@ class UserController extends Controller {
 				'actions'=>array('index','view','create'),
 				'users'=>array('*'),
 			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+			array('allow', // allow authenticated user to perform 'update' and 'delete' actions
 				'actions'=>array('update','delete'),
 				'users'=>array('@'),
 			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
+			array('allow', // allow admin user to perform 'admin' actions
 				'actions'=>array('admin'),
-				// 'users'=>array('admin'),
-				'users'=>array('@'),
+				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -63,8 +62,7 @@ class UserController extends Controller {
 	public function actionCreate() {
 		$model=new User;
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['User']))
 		{
@@ -115,7 +113,6 @@ class UserController extends Controller {
 			$this->loadModel()->delete();
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
-				// $this->redirect(array('index'));
 				$this->redirect(array('/site/logout'));
 		}
 		else
@@ -159,7 +156,7 @@ class UserController extends Controller {
 				$this->_model=User::model()->findbyPk($_GET['id']);
 
 			if($this->_model===null)
-				throw new CHttpException(404,'The requested page does not exist.');
+				throw new CHttpException(404,'A página solicitada não existe.');
 		}
 		return $this->_model;
 	}

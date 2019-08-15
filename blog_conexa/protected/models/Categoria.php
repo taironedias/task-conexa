@@ -36,8 +36,6 @@ class Categoria extends CActiveRecord
 		return array(
 			array('name', 'required'),
 			array('name', 'length', 'max'=>50),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
 			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}

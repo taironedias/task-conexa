@@ -40,4 +40,4 @@ $form=$this->beginWidget('CActiveForm', array(
 
 <?php $this->endWidget(); ?>
 
-</div><!-- form -->
+</div>

@@ -1,7 +1,6 @@
 <?php
 
-class PostController extends Controller
-{
+class PostController extends Controller {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -13,6 +12,7 @@ class PostController extends Controller
 	 */
 	private $_model;
 
+	public $permissionUpdate='';
 	/**
 	 * @return array action filters
 	 */
@@ -52,21 +52,41 @@ class PostController extends Controller
 	 */
 	public function actionView() {
 		$model=$this->loadModel();
-		$categoria=Categoria::model()->findbyPk($model->idCategoria);
+		$modelComment=new Comentario;
+		$htmlOptions= array();
 
-		// $comentarios=Comentario::model()->findAllByAttributes(array('idPost'=>$model->id));
-		// $comentarios = Yii::app()->db->createCommand('select c.texto, u.username from Comentario c User u on u.id=c.idUser where c.idPost = :id;')->queryAll(array(':id'=>$model->id));	
-
+		$categoria=Categoria::model()->findbyPk($model->idCategoria);	
+		
 		$comentarios = Yii::app()->db->createCommand()
-    				->select('c.texto, u.username')
-					->from('Comentario c, User u')
-					->where('c.idPost=:id and u.id=c.idUser', array(':id'=>$model->id))
-					->queryAll();
+		->select('c.texto, u.username')
+		->from('Comentario c, User u')
+		->where('c.idPost=:id and u.id=c.idUser', array(':id'=>$model->id))
+		->queryAll();
+		
+		$nameUserLogged=Yii::app()->user->name;
+		$checkUser=(int)Yii::app()->db->createCommand('SELECT COUNT(*) FROM User WHERE username=:nameUser')->queryScalar(array(':nameUser'=>$nameUserLogged));
+
+		if($checkUser > 0){
+			if(isset($_POST['Comentario'])) {
+				$modelComment->attributes=$_POST['Comentario'];
+				$modelComment->idUser=(int)User::model()->findByAttributes(array('username'=>$nameUserLogged))->id;
+				$modelComment->idPost=(int)$model->id;
+				
+				if($modelComment->validate() && $modelComment->save())
+					$this->redirect(array('view','id'=>$model->id));
+			}
+		} else {
+			$htmlOptions = array('disabled'=>true);
+		}
+					
+
 
 		$this->render('view',array(
 			'model'=>$model,
+			'modelComment'=>$modelComment,
 			'categoria'=>$categoria,
 			'comentarios'=>$comentarios,
+			'htmlOptions'=>$htmlOptions,
 		));
 	}
 
@@ -76,19 +96,33 @@ class PostController extends Controller
 	 */
 	public function actionCreate() {
 		$model=new Post;
+		global $permissionUpdate;
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
-		if(isset($_POST['Post']))
-		{
+		// Autor
+		$model->autor=Yii::app()->user->name;
+		$idUserLogged=(int)User::model()->findByAttributes(array('username'=>$model->autor))->id;
+		// Data
+		$model->dataPost=date('Y-m-d h:i:s');
+
+		// Categoria
+		$model->idCategoria='';
+
+		if(isset($_POST['Post'])) {
 			$model->attributes=$_POST['Post'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			$model->idUser=$idUserLogged;
+
+			if($model->validate()) {
+				$model->idCategoria=(int)$model->attributes['idCategoria'];
+				if($model->save())
+					$this->redirect(array('view','id'=>$model->id));
+			}
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
+			'permissionUpdate'=>$permissionUpdate,
 		));
 	}
 
@@ -98,20 +132,34 @@ class PostController extends Controller
 	 */
 	public function actionUpdate() {
 		$model=$this->loadModel();
+		global $permissionUpdate;
+		$this->performAjaxValidation($model);
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		// Autor
+		$idUserLogged=User::model()->findByAttributes(array('username'=>Yii::app()->user->name))->id;
 
-		if(isset($_POST['Post']))
-		{
-			$model->attributes=$_POST['Post'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+		
+		if(isset($_POST['Post'])) {
+			if($model->idUser === $idUserLogged) {
+				$model->attributes=$_POST['Post'];
+				if($model->validate()) {
+					
+					if($model->save())
+						$this->redirect(array('view','id'=>$model->id));
+				}
+			} else {
+				$permissionUpdate='Vocẽ não tem permissão para fazer essa atualização! Apenas o criador desse post pode editá-la.';
+			}
+	
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
+			'permissionUpdate'=>$permissionUpdate,
 		));
+		
+
+
 	}
 
 	/**
@@ -136,14 +184,30 @@ class PostController extends Controller
 	 * Lists all models.
 	 */
 	public function actionIndex() {
+
 		$dataProvider=new CActiveDataProvider('Post', array(
 			'criteria'=>array(
 				'order'=>'dataPost DESC',
-				'limit'=>2,
 			)
 		));
+
+
+		$model=Categoria::model()->findAll();
+
+		if(isset($_GET['id'])){
+			$idCategorySelected=Categoria::model()->findbyPk($_GET['id'])->id;
+			$dataProvider=new CActiveDataProvider('Post', array(
+				'criteria'=>array(
+					'condition'=>'idCategoria='. $idCategorySelected,
+					'order'=>'dataPost DESC',
+				)
+			));
+	
+		}
+
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
+			'model'=>$model,
 		));
 	}
 
@@ -170,7 +234,7 @@ class PostController extends Controller
 			if(isset($_GET['id']))
 				$this->_model=Post::model()->findbyPk($_GET['id']);
 			if($this->_model===null)
-				throw new CHttpException(404,'The requested page does not exist.');
+				throw new CHttpException(404,'A página solicitada não existe.');
 		}
 		return $this->_model;
 	}

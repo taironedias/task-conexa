@@ -161,7 +161,7 @@ class CategoriaController extends Controller
 			if(isset($_GET['id']))
 				$this->_model=Categoria::model()->findbyPk($_GET['id']);
 			if($this->_model===null)
-				throw new CHttpException(404,'The requested page does not exist.');
+				throw new CHttpException(404,'A página solicitada não existe.');
 		}
 		return $this->_model;
 	}

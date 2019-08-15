@@ -90,9 +90,6 @@ class ComentarioController extends Controller
 	{
 		$model=$this->loadModel();
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
 		if(isset($_POST['Comentario']))
 		{
 			$model->attributes=$_POST['Comentario'];
@@ -161,7 +158,7 @@ class ComentarioController extends Controller
 			if(isset($_GET['id']))
 				$this->_model=Comentario::model()->findbyPk($_GET['id']);
 			if($this->_model===null)
-				throw new CHttpException(404,'The requested page does not exist.');
+				throw new CHttpException(404,'A página solicitada não existe.');
 		}
 		return $this->_model;
 	}

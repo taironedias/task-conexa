@@ -39,8 +39,6 @@ class Comentario extends CActiveRecord
 			array('texto, idUser, idPost', 'required'),
 			array('idUser, idPost', 'numerical', 'integerOnly'=>true),
 			array('texto', 'length', 'max'=>250),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
 			array('id, texto, idUser, idPost', 'safe', 'on'=>'search'),
 		);
 	}

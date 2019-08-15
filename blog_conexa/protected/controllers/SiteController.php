@@ -25,20 +25,15 @@ class SiteController extends Controller
 	 * This is the default 'index' action that is invoked
 	 * when an action is not explicitly requested by users.
 	 */
-	public function actionIndex()
-	{
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-		$this->render('index');
+	public function actionIndex() {
+		$this->redirect(array('post/'));
 	}
 
 	/**
 	 * This is the action to handle external exceptions.
 	 */
-	public function actionError()
-	{
-		if($error=Yii::app()->errorHandler->error)
-		{
+	public function actionError() {
+		if($error=Yii::app()->errorHandler->error) {
 			if(Yii::app()->request->isAjaxRequest)
 				echo $error['message'];
 			else
@@ -49,11 +44,9 @@ class SiteController extends Controller
 	/**
 	 * Displays the contact page
 	 */
-	public function actionContact()
-	{
+	public function actionContact() {
 		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
+		if(isset($_POST['ContactForm'])) {
 			$model->attributes=$_POST['ContactForm'];
 			if($model->validate()) {
 				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
@@ -88,7 +81,6 @@ class SiteController extends Controller
 			$model->attributes=$_POST['LoginForm'];
 			// validate user input and redirect to the previous page if valid
 			if($model->validate() && $model->login())
-			
 				$this->redirect(Yii::app()->user->returnUrl);
 		}
 		// display the login form
@@ -100,7 +92,7 @@ class SiteController extends Controller
 	 */
 	public function actionLogout() {
 		Yii::app()->user->logout();
-		$this->redirect(Yii::app()->homeUrl);
+		$this->redirect(array('post/'));
 	}
 
 

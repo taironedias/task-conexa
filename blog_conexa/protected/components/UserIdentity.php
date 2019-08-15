@@ -15,17 +15,7 @@ class UserIdentity extends CUserIdentity
 	 * against some persistent user identity storage (e.g. database).
 	 * @return boolean whether authentication succeeds.
 	 */
-	public function authenticate()
-	{
-		/* $query = Yii::app()->db->createCommand('SELECT * FROM User')->query([]);
-		$query = Yii::app()->db->createCommand()
-		->select()
-		->from()
-		->where()
-		->order()
-		->limit();
-		*/
-		
+	public function authenticate() {	
 		$unUser = User::model()->find('username = :username', [':username'=>$this->username]);
 		$pwUser = User::model()->find('password = :password', [':password'=>$this->password]);
 
@@ -35,6 +25,5 @@ class UserIdentity extends CUserIdentity
 		}
 		
 		return !$this->errorCode=self::ERROR_USERNAME_INVALID;
-		
 	}
 }

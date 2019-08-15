@@ -26,7 +26,7 @@
 .grid-view table.items th
 {
 	color: white;
-	background: url("bg.gif") repeat-x scroll left top white;
+	background: url("bg1.gif") repeat-x scroll left top white;
 	text-align: center;
 }
 
@@ -56,12 +56,12 @@
 
 .grid-view table.items tr.even
 {
-	background: #F8F8F8;
+	background: #FFF8EB;
 }
 
 .grid-view table.items tr.odd
 {
-	background: #E5F1F4;
+	background: #FFD6BB;
 }
 
 .grid-view table.items tr.selected

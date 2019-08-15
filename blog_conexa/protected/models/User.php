@@ -40,8 +40,6 @@ class User extends CActiveRecord
 			array('username, password, confirmPassword, email', 'required'),
 			array('username, password, email', 'length', 'max'=>128),
 			array('password, confirmPassword', 'compareEqual'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
 			array('id, username, password, email', 'safe', 'on'=>'search'),
 		);
 	}

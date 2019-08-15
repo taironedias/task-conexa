@@ -1,15 +1,9 @@
 <?php
-$this->breadcrumbs=array(
-	'Posts'=>array('index'),
-	'Create',
-);
-
 $this->menu=array(
-	array('label'=>'List Post', 'url'=>array('index')),
-	array('label'=>'Manage Post', 'url'=>array('admin')),
+	array('label'=>'Ver Posts', 'url'=>array('index')),
 );
 ?>
 
-<h1>Create Post</h1>
+<h1>Criar Post</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model,'permissionUpdate'=>$permissionUpdate)); ?>

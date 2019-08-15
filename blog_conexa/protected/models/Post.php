@@ -43,8 +43,6 @@ class Post extends CActiveRecord
 			array('idUser, idCategoria', 'numerical', 'integerOnly'=>true),
 			array('texto', 'length', 'max'=>500),
 			array('autor, titulo', 'length', 'max'=>128),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
 			array('id, texto, autor, titulo, dataPost, idUser, idCategoria', 'safe', 'on'=>'search'),
 		);
 	}
@@ -73,9 +71,9 @@ class Post extends CActiveRecord
 			'texto' => 'Texto',
 			'autor' => 'Autor',
 			'titulo' => 'Titulo',
-			'dataPost' => 'Data Post',
+			'dataPost' => 'Data do Post',
 			'idUser' => 'Id User',
-			'idCategoria' => 'Id Categoria',
+			'idCategoria' => 'Categoria',
 		);
 	}
 
